@@ -1,5 +1,8 @@
 import numpy as np
 import cv2
+from PyQt4 import QtGui
+import sys
+from GUI import GUI
 
 
 def inside(r, q):
@@ -16,18 +19,32 @@ def draw_detections(img, rects, thickness = 1):
         pad_w, pad_h = int(0.15*w), int(0.05*h)
         cv2.rectangle(img, (x+pad_w, y+pad_h), (x+w-pad_w, y+h-pad_h), (0, 255, 0), thickness)
 
-
-if __name__ == '__main__':
-
+def got_file(filepath):
     hog = cv2.HOGDescriptor()
-    hog.setSVMDetector( cv2.HOGDescriptor_getDefaultPeopleDetector() )
-    cap=cv2.VideoCapture('ScreenCaptureProject4.avi')
+    hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
+    dispath = None
+    for line in filepath:
+        dispath = line
+    print("THISSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS" + dispath)
+    cap = cv2.VideoCapture(dispath)
     while True:
-        _,frame=cap.read()
-        found,w=hog.detectMultiScale(frame, winStride=(8,8), padding=(32,32), scale=1.05)
-        draw_detections(frame,found)
-        cv2.imshow('feed',frame)
+        _, frame = cap.read()
+        found, w = hog.detectMultiScale(frame, winStride=(8, 8), padding=(32, 32), scale=1.05)
+        draw_detections(frame, found)
+        cv2.imshow('feed', frame)
         ch = 0xFF & cv2.waitKey(1)
         if ch == 27:
             break
     cv2.destroyAllWindows()
+
+def main():
+    app = QtGui.QApplication(sys.argv)
+    ex = GUI()
+    sys.exit(app.exec_())
+
+if __name__ == '__main__':
+    main()
+
+
+
+
