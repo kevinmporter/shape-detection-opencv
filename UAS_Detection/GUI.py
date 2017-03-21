@@ -1,10 +1,15 @@
 import sys
 import PyQt4
 from PyQt4 import QtGui
+import cv2
+import numpy as np
+import Detection
+import os
+import sys
 
 
 class GUI(QtGui.QWidget):
-    filepath = None
+    filepath = 'ScreenCaptureProject4.avi'
     flag = False
     def __init__(self):
         super(GUI, self).__init__()
@@ -28,19 +33,16 @@ class GUI(QtGui.QWidget):
         self.setWindowTitle('Search and Response Software')
         self.show()
 
+    def SingleDetect(self):
+        os.system('python Detection.py')
+
+
     def setFileName(self, x):
 
         filepath = x
 
     def getFileName(self):
         return self.filepath
-
-    def SingleDetect(self):
-        if self.filepath != None:
-            return True
-        else:
-            return False
-
 
     def SingleBrowse(self):
         filePaths = QtGui.QFileDialog.getOpenFileNames(self,

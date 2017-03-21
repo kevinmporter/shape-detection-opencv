@@ -1,9 +1,6 @@
 import numpy as np
 import cv2
-from PyQt4 import QtGui
-import sys
-from GUI import GUI
-
+import GUI
 
 def inside(r, q):
     rx, ry, rw, rh = r
@@ -11,22 +8,18 @@ def inside(r, q):
     return rx > qx and ry > qy and rx + rw < qx + qw and ry + rh < qy + qh
 
 
-def draw_detections(img, rects, thickness = 1):
+def draw_detections(img, rects, thickness=1):
     for x, y, w, h in rects:
-        # the HOG detector returns slightly larger rectangles than the real
-        #  objects.
-        # so we slightly shrink the rectangles to get a nicer output.
-        pad_w, pad_h = int(0.15*w), int(0.05*h)
-        cv2.rectangle(img, (x+pad_w, y+pad_h), (x+w-pad_w, y+h-pad_h), (0, 255, 0), thickness)
+        pad_w, pad_h = int(0.15 * w), int(0.05 * h)
+        cv2.rectangle(img, (x + pad_w, y + pad_h), (x + w - pad_w, y + h - pad_h), (0, 255, 0), thickness)
 
-def got_file(filepath):
+
+if __name__ == '__main__':
+
     hog = cv2.HOGDescriptor()
     hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
-    dispath = None
-    for line in filepath:
-        dispath = line
-    print("THISSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS" + dispath)
-    cap = cv2.VideoCapture(dispath)
+    #cap = cv2.VideoCapture('ScreenCaptureProject4.avi')
+    cap = cv2.VideoCapture(GUI.GUI.filepath)
     while True:
         _, frame = cap.read()
         found, w = hog.detectMultiScale(frame, winStride=(8, 8), padding=(32, 32), scale=1.05)
@@ -36,15 +29,3 @@ def got_file(filepath):
         if ch == 27:
             break
     cv2.destroyAllWindows()
-
-def main():
-    app = QtGui.QApplication(sys.argv)
-    ex = GUI()
-    sys.exit(app.exec_())
-
-if __name__ == '__main__':
-    main()
-
-
-
-
