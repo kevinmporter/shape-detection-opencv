@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-import GUI
+import sys
 
 def inside(r, q):
     rx, ry, rw, rh = r
@@ -18,8 +18,9 @@ if __name__ == '__main__':
 
     hog = cv2.HOGDescriptor()
     hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
-    #cap = cv2.VideoCapture('ScreenCaptureProject4.avi')
-    cap = cv2.VideoCapture(GUI.GUI.filepath)
+    print sys.argv
+    #print("In Detection main "+"File Path ->" + sys.argv[1])
+    cap = cv2.VideoCapture(sys.argv[1])
     while True:
         _, frame = cap.read()
         found, w = hog.detectMultiScale(frame, winStride=(8, 8), padding=(32, 32), scale=1.05)

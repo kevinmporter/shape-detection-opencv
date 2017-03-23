@@ -6,14 +6,15 @@ import numpy as np
 import Detection
 import os
 import sys
+import subprocess
 
 
 class GUI(QtGui.QWidget):
-    filepath = 'ScreenCaptureProject4.avi'
+    filepath = None
+
     flag = False
     def __init__(self):
         super(GUI, self).__init__()
-
         self.initUI()
 
     def initUI(self):
@@ -34,33 +35,27 @@ class GUI(QtGui.QWidget):
         self.show()
 
     def SingleDetect(self):
-        os.system('python Detection.py')
-
-
-    def setFileName(self, x):
-
-        filepath = x
-
-    def getFileName(self):
-        return self.filepath
+        print "SingleDetect "+GUI.filepath
+        subprocess.call(['python', 'Detection.py', str(GUI.filepath)])
 
     def SingleBrowse(self):
         filePaths = QtGui.QFileDialog.getOpenFileNames(self,
                                                        'Multiple File',
                                                        "~/Desktop/PyRevolution/PyQt4",
                                                       '*.avi')
-        for filePath in filePaths:
-            print('filePath',filePath, '\n')
-            fileHandle = open(filePath, 'r')
-            lines = fileHandle.readlines()
-            for line in lines:
-                print("File Path ->" + line)
-                self.setFileName(line)
+        for path in filePaths:
+            print('filePath',path, '\n')
+            fileHandle = open(path, 'r')
+            #lines = fileHandle.readlines()
+            print("File Path -> " + fileHandle.name)
+            GUI.filepath = fileHandle.name
+
 
 
 def main():
     app = QtGui.QApplication(sys.argv)
     ex = GUI()
+    print "in GUI main"
     sys.exit(app.exec_())
 
 
