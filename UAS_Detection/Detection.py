@@ -6,8 +6,7 @@ import datetime
 import os
 from PyQt4 import QtGui
 import sys
-from GUI import GUI
-
+import GUI
 
 def pull_key_frames(path):
     os.system('/usr/local/bin/ffmpeg -i ' + path + ' -vf select="eq(pict_type\,PICT_TYPE_I)" -vsync 2 -f image2 tmp/%d.jpeg')
@@ -22,22 +21,16 @@ def inside(r, q):
 
 def draw_detections(img, rects, thickness=1):
     for x, y, w, h in rects:
-        # the HOG detector returns slightly larger rectangles than the real
-        #  objects.
-        # so we slightly shrink the rectangles to get a nicer output.
-        pad_w, pad_h = int(0.15*w), int(0.05*h)
-        cv2.rectangle(img, (x+pad_w, y+pad_h), (x+w-pad_w, y+h-pad_h), (0, 255, 0), thickness)
+        pad_w, pad_h = int(0.15 * w), int(0.05 * h)
+        cv2.rectangle(img, (x + pad_w, y + pad_h), (x + w - pad_w, y + h - pad_h), (0, 255, 0), thickness)
 
-def got_file(filepath):
+
+if __name__ == '__main__':
+
     hog = cv2.HOGDescriptor()
     hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
-    thread = Thread(target=pull_key_frames, args=('dumb.mp4', ))
+    thread = Thread(target=pull_key_frames, args=(GUI.GUI.filepath, ))
     thread.start()
-    dispath = None
-    for line in filepath:
-        dispath = line
-    print("THISSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS" + dispath)
-    pull_key_frames(dispath)
     num = 1
     while True:
         path = os.path.join('tmp', str(num) + '.jpeg')
