@@ -10,7 +10,7 @@ import GUI
 
 
 def pull_key_frames(path):
-    os.system('/usr/local/bin/ffmpeg -i ' + path + ' -vf select="eq(pict_type\,PICT_TYPE_I)" -vsync 2 -f image2 tmp/%d.jpeg')
+    os.system('ffmpeg -i ' + path + ' -vf select="eq(pict_type\,PICT_TYPE_I)" -vsync 2 -f image2 tmp/%d.jpeg')
 
 
 def inside(r, q):
