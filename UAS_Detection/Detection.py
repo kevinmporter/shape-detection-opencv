@@ -4,10 +4,14 @@ import numpy as np
 import cv2
 import datetime
 import os
+from PyQt4 import QtGui
+import sys
+from GUI import GUI
 
 
 def pull_key_frames(path):
     os.system('/usr/local/bin/ffmpeg -i ' + path + ' -vf select="eq(pict_type\,PICT_TYPE_I)" -vsync 2 -f image2 tmp/%d.jpeg')
+
 
 
 def inside(r, q):
@@ -24,14 +28,16 @@ def draw_detections(img, rects, thickness=1):
         pad_w, pad_h = int(0.15*w), int(0.05*h)
         cv2.rectangle(img, (x+pad_w, y+pad_h), (x+w-pad_w, y+h-pad_h), (0, 255, 0), thickness)
 
-
-if __name__ == '__main__':
-
+def got_file(filepath):
     hog = cv2.HOGDescriptor()
     hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
     thread = Thread(target=pull_key_frames, args=('dumb.mp4', ))
     thread.start()
-    #pull_key_frames('dumb.mp4')
+    dispath = None
+    for line in filepath:
+        dispath = line
+    print("THISSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS" + dispath)
+    pull_key_frames(dispath)
     num = 1
     while True:
         path = os.path.join('tmp', str(num) + '.jpeg')
@@ -46,3 +52,11 @@ if __name__ == '__main__':
             if ch == 27:
                 break
     cv2.destroyAllWindows()
+
+def main():
+    app = QtGui.QApplication(sys.argv)
+    ex = GUI()
+    sys.exit(app.exec_())
+
+if __name__ == '__main__':
+    main()
