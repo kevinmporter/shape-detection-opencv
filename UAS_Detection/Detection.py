@@ -8,6 +8,7 @@ from PyQt4 import QtGui
 import sys
 import GUI
 
+
 def pull_key_frames(path):
     os.system('/usr/local/bin/ffmpeg -i ' + path + ' -vf select="eq(pict_type\,PICT_TYPE_I)" -vsync 2 -f image2 tmp/%d.jpeg')
 
@@ -29,9 +30,11 @@ if __name__ == '__main__':
 
     hog = cv2.HOGDescriptor()
     hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
-    thread = Thread(target=pull_key_frames, args=(GUI.GUI.filepath, ))
+    thread = Thread(target=pull_key_frames, args=(sys.argv[1], ))
     thread.start()
     num = 1
+    print sys.argv
+    #print("In Detection main "+"File Path ->" + sys.argv[1])
     while True:
         path = os.path.join('tmp', str(num) + '.jpeg')
         if os.path.isfile(path):
