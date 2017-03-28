@@ -26,22 +26,27 @@ def draw_detections(img, rects, thickness=1):
 
 
 if __name__ == '__main__':
-
+    # get the human object detection module
     hog = cv2.HOGDescriptor()
     hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
     thread = Thread(target=pull_key_frames, args=(sys.argv[1], ))
+    # begin extracting the keyframes from the video file in a separate thread
     thread.start()
     num = 1
     print sys.argv
     #print("In Detection main "+"File Path ->" + sys.argv[1])
+    # look for new frames in the tmp directory
     while True:
         path = os.path.join('tmp', str(num) + '.jpeg')
-        if os.path.isfile(path):
+        if os.path.isfile(path):  # if the file exists
             num += 1
             frame = cv2.imread(path)
             print datetime.datetime.now()
+            # on the frame, get the dimensions surrounding a "found" object
             found, w = hog.detectMultiScale(frame, winStride=(8, 8), padding=(32, 32), scale=1.05)
+            # draw a rectangle around it
             draw_detections(frame, found)
+            # display to user
             cv2.imshow('feed', frame)
             ch = 0xFF & cv2.waitKey(1)
             if ch == 27:
