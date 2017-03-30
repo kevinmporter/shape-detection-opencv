@@ -5,12 +5,20 @@ import cv2
 import datetime
 import os
 from PyQt4 import QtGui
+from db import Result, VideoRun
 import sys
 import GUI
 
 
+record = VideoRun()
+results = []
+
+
 def pull_key_frames(path):
     os.system('ffmpeg -i ' + path + ' -vf select="eq(pict_type\,PICT_TYPE_I)" -vsync 2 -f image2 tmp/%d.jpeg')
+    record.end = datetime.datetime.now()
+    record.results = results
+    record.save()
 
 
 def inside(r, q):
@@ -21,6 +29,8 @@ def inside(r, q):
 
 def draw_detections(img, rects, thickness=1):
     for x, y, w, h in rects:
+        result = Result.objects.create(picture=img, x=x, y=y, w=w, h=h)
+        results.append(result)
         pad_w, pad_h = int(0.15 * w), int(0.05 * h)
         cv2.rectangle(img, (x + pad_w, y + pad_h), (x + w - pad_w, y + h - pad_h), (0, 255, 0), thickness)
 
@@ -32,8 +42,9 @@ if __name__ == '__main__':
     thread = Thread(target=pull_key_frames, args=(sys.argv[1], ))
     # begin extracting the keyframes from the video file in a separate thread
     thread.start()
+    start = datetime.datetime.now()
+    record.start = start
     num = 1
-    print sys.argv
     #print("In Detection main "+"File Path ->" + sys.argv[1])
     # look for new frames in the tmp directory
     while True:
