@@ -1,6 +1,11 @@
 import mongoengine as me
 
 
+me.connect('uas_detection_collection',
+           host='localhost'
+           )
+
+
 class Result(me.EmbeddedDocument):
     x = me.IntField()
     y = me.IntField()
