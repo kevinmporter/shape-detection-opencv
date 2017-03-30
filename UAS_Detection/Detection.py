@@ -64,6 +64,7 @@ if __name__ == '__main__':
                 break
     cv2.destroyAllWindows()
 
+
 def main():
     app = QtGui.QApplication(sys.argv)
     ex = GUI()
