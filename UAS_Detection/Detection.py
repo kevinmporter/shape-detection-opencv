@@ -11,6 +11,7 @@ except ImportError:
     pass
 from db import Result, VideoRun
 import sys
+import shutil
 
 
 record = VideoRun()
@@ -40,10 +41,12 @@ def draw_detections(img, rects, thickness=1):
 
 
 if __name__ == '__main__':
+    if not os.path.exists('tmp'):
+        os.makedirs('tmp')
     # get the human object detection module
     hog = cv2.HOGDescriptor()
     hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
-    thread = Thread(target=pull_key_frames, args=(sys.argv[1], ))
+    thread = Thread(target=pull_key_frames, args=(sys.argv[1],))
     # begin extracting the keyframes from the video file in a separate thread
     thread.start()
     start = datetime.datetime.now()
@@ -66,6 +69,7 @@ if __name__ == '__main__':
             ch = 0xFF & cv2.waitKey(1)
             if ch == 27:
                 break
+    shutil.rmtree('tmp', ignore_errors=True)
     cv2.destroyAllWindows()
 
 
