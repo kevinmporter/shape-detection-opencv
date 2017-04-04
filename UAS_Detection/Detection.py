@@ -4,10 +4,13 @@ import numpy as np
 import cv2
 import datetime
 import os
-from PyQt4 import QtGui
+try:
+    from PyQt4 import QtGui
+    import GUI
+except ImportError:
+    pass
 from db import Result, VideoRun
 import sys
-import GUI
 
 
 record = VideoRun()
@@ -29,7 +32,8 @@ def inside(r, q):
 
 def draw_detections(img, rects, thickness=1):
     for x, y, w, h in rects:
-        result = Result.objects.create(picture=img, x=x, y=y, w=w, h=h)
+        result = Result(picture=img, x=x, y=y, w=w, h=h)
+        result.save()
         results.append(result)
         pad_w, pad_h = int(0.15 * w), int(0.05 * h)
         cv2.rectangle(img, (x + pad_w, y + pad_h), (x + w - pad_w, y + h - pad_h), (0, 255, 0), thickness)

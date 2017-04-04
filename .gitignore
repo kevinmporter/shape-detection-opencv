@@ -1,3 +1,5 @@
 UAS_Detection/.idea/workspace.xml
 \.idea/
 UAS_Detection/tmp/
+
+*.pyc
