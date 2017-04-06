@@ -1,8 +1,11 @@
 import mongoengine as me
+import settings
 
 
-me.connect('uas_detection_collection',
-           host='localhost'
+me.connect(settings.MONGODB_DATABASE["name"],
+           host=settings.MONGODB_DATABASE["host"],
+           username=settings.MONGODB_DATABASE["username"],
+           password=settings.MONGODB_DATABASE["password"]
            )
 
 
