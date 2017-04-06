@@ -1,6 +1,14 @@
+"""
+The GUI configuration in order to interface with Detection.py. Gives the user
+the opportunity to supply a path and to begin detection.
+"""
 import sys
-import PyQt4
-from PyQt4 import QtGui
+try:
+    import PyQt4
+    from PyQt4 import QtGui
+except ImportError:
+    print 'PyQt4 is required to run this GUI software. Please install PyQt4 or ' + \
+        'run Detection.py directly to use in CLI mode.'
 import cv2
 import numpy as np
 import Detection
@@ -10,6 +18,9 @@ import subprocess
 
 
 class GUI(QtGui.QWidget):
+    """
+    PyQt4 window.
+    """
     filepath = None
 
     flag = False
@@ -18,6 +29,10 @@ class GUI(QtGui.QWidget):
         self.initUI()
 
     def initUI(self):
+        """
+        Configure the system with all the requisite buttons.
+        :return: nothing
+        """
 
         lbl = QtGui.QLabel('Video to Process:', self)
         lbl.move(60, 60)
@@ -35,10 +50,18 @@ class GUI(QtGui.QWidget):
         self.show()
 
     def SingleDetect(self):
-        print "SingleDetect "+GUI.filepath
+        """
+        Call Detection.py.
+        :return: nothing
+        """
+        print "SingleDetect " + GUI.filepath
         subprocess.call(['python', 'Detection.py', str(GUI.filepath)])
 
     def SingleBrowse(self):
+        """
+        Browse for a video file to run detection on.
+        :return: nothing
+        """
         filePaths = QtGui.QFileDialog.getOpenFileNames(self,
                                                        'Multiple File',
                                                        "~/Desktop/PyRevolution/PyQt4",
